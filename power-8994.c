@@ -121,7 +121,7 @@ int set_interactive_override(int on) {
         /* Display off */
         if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
             (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
-            int resource_values[] = {}; /* dummy node */
+            int resource_values[] = {0x777}; /* 4+0 core config in display off */
             perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values,
                                 ARRAY_SIZE(resource_values));
             return HINT_HANDLED;
