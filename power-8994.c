@@ -83,7 +83,7 @@ static int process_video_encode_hint(void* metadata) {
             int resource_values[] = {0x2C07, 0x2F5A, 0x2704, 0x4032};
 
             perform_hint_action(video_encode_metadata.hint_id, resource_values,
-                                sizeof(resource_values) / sizeof(resource_values[0]));
+                                ARRAY_SIZE(resource_values));
             return HINT_HANDLED;
         }
     } else if (video_encode_metadata.state == 0) {
@@ -122,10 +122,9 @@ int set_interactive_override(int on) {
         if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
             (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
             int resource_values[] = {}; /* dummy node */
-                perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values,
-                                    sizeof(resource_values) / sizeof(resource_values[0]));
-                return HINT_HANDLED;
-            }
+            perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values,
+                                ARRAY_SIZE(resource_values));
+            return HINT_HANDLED;
         }
     } else {
         /* Display on */

@@ -123,7 +123,7 @@ int set_interactive_override(int on) {
                     0x28,
             };
             perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values,
-                                sizeof(resource_values) / sizeof(resource_values[0]));
+                                ARRAY_SIZE(resource_values));
         } /* Perf time rate set for CORE0,CORE4 8952 target*/
 
     } else {
@@ -169,7 +169,6 @@ int set_interactive_override(int on) {
 static void process_video_encode_hint(void* metadata) {
     char governor[80] = {0};
     int resource_values[20] = {0};
-    int num_resources = 0;
     struct video_encode_metadata_t video_encode_metadata;
 
     ALOGI("Got process_video_encode_hint");
@@ -216,12 +215,11 @@ static void process_video_encode_hint(void* metadata) {
                         0x41440100, 0x5f,       0x4143c100, 0x40c,
                 };
                 memcpy(resource_values, res, MIN_VAL(sizeof(resource_values), sizeof(res)));
-                num_resources = sizeof(res) / sizeof(res[0]);
                 camera_hint_ref_count++;
                 if (camera_hint_ref_count == 1) {
                     if (!video_encode_hint_sent) {
                         perform_hint_action(video_encode_metadata.hint_id, resource_values,
-                                            num_resources);
+                                            ARRAY_SIZE(res));
                         video_encode_hint_sent = 1;
                     }
                 }
@@ -232,12 +230,11 @@ static void process_video_encode_hint(void* metadata) {
                         0xa,
                 };
                 memcpy(resource_values, res, MIN_VAL(sizeof(resource_values), sizeof(res)));
-                num_resources = sizeof(res) / sizeof(res[0]);
                 camera_hint_ref_count++;
                 if (camera_hint_ref_count == 1) {
                     if (!video_encode_hint_sent) {
                         perform_hint_action(video_encode_metadata.hint_id, resource_values,
-                                            num_resources);
+                                            ARRAY_SIZE(res));
                         video_encode_hint_sent = 1;
                     }
                 }
@@ -250,12 +247,11 @@ static void process_video_encode_hint(void* metadata) {
                     0x41430000, 0x1, 0x41434000, 0x1, 0x41424000, 0x28,
             };
             memcpy(resource_values, res, MIN_VAL(sizeof(resource_values), sizeof(res)));
-            num_resources = sizeof(res) / sizeof(res[0]);
             camera_hint_ref_count++;
             if (camera_hint_ref_count == 1) {
                 if (!video_encode_hint_sent) {
                     perform_hint_action(video_encode_metadata.hint_id, resource_values,
-                                        num_resources);
+                                        ARRAY_SIZE(res));
                     video_encode_hint_sent = 1;
                 }
             }
