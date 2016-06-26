@@ -47,6 +47,7 @@
 #include "performance.h"
 #include "power-common.h"
 
+static int display_hint_sent;
 static struct hint_handles handles[NUM_HINTS];
 
 void power_init() {
@@ -118,6 +119,14 @@ void set_interactive(int on)
         /* Send Display ON hint to perf HAL */
         perf_hint_enable(VENDOR_HINT_DISPLAY_ON, 0);
     }
+
+    /**
+     * Ignore consecutive display-off hints
+     * Consecutive display-on hints are already handled
+     */
+    if (display_hint_sent && !on) return;
+
+    display_hint_sent = !on;
 
     if (set_interactive_override(on) == HINT_HANDLED) {
         return;

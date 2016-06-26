@@ -47,8 +47,6 @@
 #include "power-common.h"
 #include "utils.h"
 
-static int display_hint_sent;
-
 static int process_video_encode_hint(void* metadata) {
     char governor[80];
     struct video_encode_metadata_t video_encode_metadata;
@@ -124,10 +122,8 @@ int set_interactive_override(int on) {
         if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
             (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
             int resource_values[] = {}; /* dummy node */
-            if (!display_hint_sent) {
                 perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values,
                                     sizeof(resource_values) / sizeof(resource_values[0]));
-                display_hint_sent = 1;
                 return HINT_HANDLED;
             }
         }
@@ -136,7 +132,6 @@ int set_interactive_override(int on) {
         if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
             (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
             undo_hint_action(DISPLAY_STATE_HINT_ID);
-            display_hint_sent = 0;
             return HINT_HANDLED;
         }
     }

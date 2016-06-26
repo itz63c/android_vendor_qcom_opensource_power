@@ -51,7 +51,6 @@
 
 #define MIN_VAL(X, Y) ((X > Y) ? (Y) : (X))
 
-static int display_hint_sent;
 static int video_encode_hint_sent;
 static int cam_preview_hint_sent;
 
@@ -140,10 +139,7 @@ int set_interactive_override(int on) {
                 memcpy(resource_values, res, MIN_VAL(sizeof(resource_values), sizeof(res)));
                 num_resources = sizeof(res) / sizeof(res[0]);
             }
-            if (!display_hint_sent) {
-                perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values, num_resources);
-                display_hint_sent = 1;
-            }
+            perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values, num_resources);
         }
 
     } else {
@@ -151,7 +147,6 @@ int set_interactive_override(int on) {
         if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
             (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
             undo_hint_action(DISPLAY_STATE_HINT_ID);
-            display_hint_sent = 0;
         }
     }
     return HINT_HANDLED;
