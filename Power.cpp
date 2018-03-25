@@ -62,7 +62,7 @@ Return<void> Power::powerHint(PowerHint_1_0 hint, int32_t data) {
     return Void();
 }
 
-Return<void> Power::setFeature(Feature feature, bool activate) {
+Return<void> Power::setFeature(Feature UNUSED(feature), bool UNUSED(activate)) {
     return Void();
 }
 

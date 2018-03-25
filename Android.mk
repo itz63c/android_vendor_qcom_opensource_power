@@ -18,6 +18,8 @@ LOCAL_SHARED_LIBRARIES := liblog libcutils libdl libxml2
 LOCAL_SRC_FILES := power.c metadata-parser.c utils.c list.c hint-data.c
 endif
 
+LOCAL_CFLAGS += -Wall -Wextra -Werror
+
 # Include target-specific files.
 ifeq ($(call is-board-platform-in-list, msm8974), true)
 LOCAL_SRC_FILES += power-8974.c
