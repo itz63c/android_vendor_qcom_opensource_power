@@ -133,34 +133,6 @@ int power_hint_override(power_hint_t hint, void* data) {
     return ret_val;
 }
 
-int set_interactive_override(int on) {
+int set_interactive_override(int UNUSED(on)) {
     return HINT_HANDLED; /* Don't excecute this code path, not in use */
-    char governor[80];
-
-    if (get_scaling_governor(governor, sizeof(governor)) == -1) {
-        ALOGE("Can't obtain scaling governor.");
-
-        return HINT_NONE;
-    }
-
-    if (!on) {
-        /* Display off */
-        if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
-            (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
-            int resource_values[] = {}; /* dummy node */
-            perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values,
-                                ARRAY_SIZE(resource_values));
-            ALOGI("Display Off hint start");
-            return HINT_HANDLED;
-        }
-    } else {
-        /* Display on */
-        if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
-            (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
-            undo_hint_action(DISPLAY_STATE_HINT_ID);
-            ALOGI("Display Off hint stop");
-            return HINT_HANDLED;
-        }
-    }
-    return HINT_NONE;
 }
