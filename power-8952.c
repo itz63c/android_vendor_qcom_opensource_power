@@ -52,7 +52,6 @@
 #define MIN_VAL(X, Y) ((X > Y) ? (Y) : (X))
 
 static int video_encode_hint_sent;
-static int camera_hint_ref_count;
 static void process_video_encode_hint(void* metadata);
 static int display_fd;
 #define SYS_DISPLAY_PWR "/sys/kernel/hbtp/display_pwr"
@@ -210,13 +209,10 @@ static void process_video_encode_hint(void* metadata) {
                         0x41440100, 0x5f,       0x4143c100, 0x3e6,
                 };
                 memcpy(resource_values, res, MIN_VAL(sizeof(resource_values), sizeof(res)));
-                camera_hint_ref_count++;
-                if (camera_hint_ref_count == 1) {
-                    if (!video_encode_hint_sent) {
-                        perform_hint_action(video_encode_metadata.hint_id, resource_values,
-                                            ARRAY_SIZE(res));
-                        video_encode_hint_sent = 1;
-                    }
+                if (!video_encode_hint_sent) {
+                    perform_hint_action(video_encode_metadata.hint_id, resource_values,
+                                        ARRAY_SIZE(res));
+                    video_encode_hint_sent = 1;
                 }
             } else {
                 /* sample_ms = 10mS */
@@ -225,13 +221,10 @@ static void process_video_encode_hint(void* metadata) {
                         0xa,
                 };
                 memcpy(resource_values, res, MIN_VAL(sizeof(resource_values), sizeof(res)));
-                camera_hint_ref_count++;
-                if (camera_hint_ref_count == 1) {
-                    if (!video_encode_hint_sent) {
-                        perform_hint_action(video_encode_metadata.hint_id, resource_values,
-                                            ARRAY_SIZE(res));
-                        video_encode_hint_sent = 1;
-                    }
+                if (!video_encode_hint_sent) {
+                    perform_hint_action(video_encode_metadata.hint_id, resource_values,
+                                        ARRAY_SIZE(res));
+                    video_encode_hint_sent = 1;
                 }
             }
         } else if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
@@ -244,23 +237,16 @@ static void process_video_encode_hint(void* metadata) {
                          INT_OP_CLUSTER0_TIMER_RATE,          BIG_LITTLE_TR_MS_40,
                          INT_OP_CLUSTER1_TIMER_RATE,          BIG_LITTLE_TR_MS_40};
             memcpy(resource_values, res, MIN_VAL(sizeof(resource_values), sizeof(res)));
-            camera_hint_ref_count++;
-            if (!video_encode_hint_sent) {
-                perform_hint_action(video_encode_metadata.hint_id, resource_values,
-                                    ARRAY_SIZE(res));
-                video_encode_hint_sent = 1;
-            }
+            perform_hint_action(video_encode_metadata.hint_id, resource_values, ARRAY_SIZE(res));
+            video_encode_hint_sent = 1;
         }
     } else if (video_encode_metadata.state == 0) {
         if (((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
              (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) ||
             ((strncmp(governor, SCHEDUTIL_GOVERNOR, strlen(SCHEDUTIL_GOVERNOR)) == 0) &&
              (strlen(governor) == strlen(SCHEDUTIL_GOVERNOR)))) {
-            camera_hint_ref_count--;
-            if (!camera_hint_ref_count) {
-                undo_hint_action(video_encode_metadata.hint_id);
-                video_encode_hint_sent = 0;
-            }
+            undo_hint_action(video_encode_metadata.hint_id);
+            video_encode_hint_sent = 0;
             return;
         }
     }
