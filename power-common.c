@@ -46,6 +46,7 @@
 #include "hint-data.h"
 #include "performance.h"
 #include "power-common.h"
+#include "utils.h"
 
 static int display_hint_sent;
 static struct hint_handles handles[NUM_HINTS];
@@ -121,7 +122,7 @@ void set_interactive(int on)
 
     if (set_interactive_override(on) == HINT_HANDLED) {
         return;
+    } else {
+        ALOGI("Hint not handled in set_interactive_override");
     }
-
-    ALOGI("Got set_interactive hint");
 }

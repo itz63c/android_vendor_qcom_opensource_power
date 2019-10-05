@@ -150,7 +150,6 @@ int set_interactive_override(int on) {
 
     if (get_scaling_governor(governor, sizeof(governor)) == -1) {
         ALOGE("Can't obtain scaling governor.");
-
         return HINT_NONE;
     }
 
@@ -161,15 +160,13 @@ int set_interactive_override(int on) {
             int resource_values[] = {0x777}; /* 4+0 core config in display off */
             perform_hint_action(DISPLAY_STATE_HINT_ID, resource_values,
                                 ARRAY_SIZE(resource_values));
-            return HINT_HANDLED;
         }
     } else {
         /* Display on */
         if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
             (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
             undo_hint_action(DISPLAY_STATE_HINT_ID);
-            return HINT_HANDLED;
         }
     }
-    return HINT_NONE;
+    return HINT_HANDLED;
 }
